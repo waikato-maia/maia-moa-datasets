@@ -19,16 +19,26 @@
  */
 package māia.ml.dataset.moa
 
+import moa.MOAObject
 import moa.options.ClassOption
 import moa.options.AbstractOptionHandler
 import moa.tasks.NullMonitor
 
 /**
- * TODO: What class does.
+ * Class that is instantiated to have a single option, which defaults
+ * to the CLI configuration string given. This is then used to materialise
+ * an instance of the MOA class that the configuration describes.
+ *
+ * This is just a helper class for [materializeMOAClass]. Use that instead.
+ *
+ * @param cls
+ *          The MOA class to be materialised.
+ * @param config
+ *          The configuration string specifying the instance.
  *
  * @author Corey Sterling (csterlin at waikato dot ac dot nz)
  */
-private class MOAClassMaterializer<C>(
+class MOAClassMaterializer<C: MOAObject>(
     cls: Class<C>,
     config: String
 ) {
@@ -44,4 +54,17 @@ private class MOAClassMaterializer<C>(
 
 }
 
-fun <C> materalizeMOAClass(cls: Class<C>, config : String) = MOAClassMaterializer(cls, config).materialize()
+/**
+ * Attempts to materialise an instance of the given class
+ * from the given CLI configuration string.
+ *
+ * @param C
+ *          The class to instantiate.
+ * @param config
+ *          The CLI configuration string for the instance.
+ * @return
+ *          The materialised instance.
+ */
+inline fun <reified C: MOAObject> materalizeMOAClass(
+    config : String
+): C = MOAClassMaterializer(C::class.java, config).materialize()

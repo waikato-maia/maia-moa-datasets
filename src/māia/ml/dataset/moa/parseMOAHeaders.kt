@@ -1,5 +1,5 @@
 /*
- * MOADataStream.kt
+ * parseMOAHeaders.kt
  * Copyright (C) 2021 University of Waikato, Hamilton, New Zealand
  *
  * This file is part of MĀIA.
@@ -20,55 +20,59 @@
 package māia.ml.dataset.moa
 
 import com.yahoo.labs.samoa.instances.Attribute
-import moa.streams.InstanceStream
-import māia.ml.dataset.DataMetadata
-import māia.ml.dataset.DataStream
+import com.yahoo.labs.samoa.instances.Instances
+import māia.ml.dataset.headers.MutableDataColumnHeaders
+import māia.util.inlineRangeForLoop
 
 /**
- * Wraps a MOA [InstanceStream] as a MĀIA [DataStream].
+ * Parses the headers of a MOA data-set for MĀIA.
  *
- * @param source
- *          The source [InstanceStream] to wrap.
+ * @param instances
+ *          The source MOA data-set to wrap.
  * @param assertPresent
  *          Function which takes the index of an attribute, the attribute
  *          itself, and whether the attribute is a target, and determines
- *          whether this [DataStream] should assert that all values will
+ *          whether the resulting headers should assert that all values will
  *          be present (no missing values).
  * @param untypedForUnrecognised
  *          Whether an untyped data-type should be produced for unrecognised
  *          attribute types. Currently only recognises nominal/numeric types.
  *          If false (the default), an exception is raised instead.
  *
+ * @return The constructed headers.
+ *
  * @throws Exception If [untypedForUnrecognised] is false and any attribute's
  *                   type is unrecognised.
  *
  * @author Corey Sterling (csterlin at waikato dot ac dot nz)
  */
-class MOADataStream(
-    internal val source : InstanceStream,
-    untypedForUnrecognised: Boolean = false,
-    assertPresent: (Int, Attribute, Boolean) -> Boolean = { _, _, _ -> false }
-) : DataStream<MOADataRow> {
+fun parseMOAHeaders(
+    instances : Instances,
+    assertPresent: (Int, Attribute, Boolean) -> Boolean = { _, _, _ -> false },
+    untypedForUnrecognised: Boolean = false
+): MutableDataColumnHeaders {
+    // Get the number of headers to create
+    val size = instances.numAttributes()
 
-    override val numColumns : Int = source.header.numAttributes()
+    // Create the empty result to parse into
+    val result = MutableDataColumnHeaders(size)
 
-    private val headersInternal = parseMOAHeaders(
-        source.header,
-        assertPresent,
-        untypedForUnrecognised
-    )
+    // For each column...
+    inlineRangeForLoop(size) { columnIndex ->
+        // Get the MOA attribute
+        val attribute = instances.attribute(columnIndex)
 
-    override val headers = headersInternal.readOnlyView
+        // Determine its feature/target status
+        val isTarget = columnIndex == instances.classIndex()
 
-    override val metadata: DataMetadata = object : DataMetadata {
-        override val name: String = source.header.toString()
+        // Let the caller decide if we should assert that all values are present
+        val shouldAssertPresent = assertPresent(columnIndex, attribute, isTarget)
+
+        // Parse the attribute and append the resulting column to our result
+        parseMOAAttribute(attribute, shouldAssertPresent, untypedForUnrecognised) { name, type ->
+            result.append(name, type, isTarget)
+        }
     }
 
-    private val rowIterator = object : Iterator<MOADataRow> {
-        override fun hasNext(): Boolean = source.hasMoreInstances()
-        override fun next(): MOADataRow = MOADataRow(source.nextInstance().data, headers, this@MOADataStream)
-    }
-
-    override fun rowIterator(): Iterator<MOADataRow> = rowIterator
-
+    return result
 }

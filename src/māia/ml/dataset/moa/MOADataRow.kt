@@ -19,21 +19,68 @@
  */
 package māia.ml.dataset.moa
 
+import com.yahoo.labs.samoa.instances.Attribute
 import com.yahoo.labs.samoa.instances.Instance
-import moa.core.Example
 import māia.ml.dataset.DataRow
-import māia.ml.dataset.WithColumnHeaders
+import māia.ml.dataset.WithColumns
+import māia.ml.dataset.WithWeight
+import māia.ml.dataset.headers.DataColumnHeaders
+import māia.ml.dataset.headers.ensureOwnership
+import māia.ml.dataset.type.DataRepresentation
+import māia.ml.dataset.type.EntropicRepresentation
+import māia.ml.dataset.type.standard.Nominal
+import māia.ml.dataset.type.standard.NominalCanonicalRepresentation
+import māia.ml.dataset.type.standard.NominalIndexRepresentation
+import māia.ml.dataset.type.standard.NumericCanonicalRepresentation
+import māia.ml.dataset.type.standard.UntypedRepresentation
+import māia.util.assertType
+import māia.util.error.UNREACHABLE_CODE
 
 /**
- * TODO: What class does.
+ * Represents an instance from a MOA data-stream in MĀIA as a [DataRow].
+ * Constructor is internal so that only [MOADataStream] can create instances.
+ *
+ * @param source
+ *          The source instance.
+ * @param headers
+ *          The headers for this row.
+ * @param stream
+ *          The [MOADataStream] that created this row (if any).
  *
  * @author Corey Sterling (csterlin at waikato dot ac dot nz)
  */
-class MOADataRow(
-    internal val source: Example<Instance>,
-    internal val stream: MOADataStream
-) : DataRow, WithColumnHeaders by stream {
+class MOADataRow internal constructor(
+    internal val source: Instance,
+    headers: DataColumnHeaders,
+    internal val stream : MOADataStream?
+) : DataRow, WithWeight, WithColumns by headers {
 
-    override fun getColumn(columnIndex : Int) : Double = source.data.value(columnIndex)
+    /**
+     * Constructor for stand-alone instances.
+     *
+     * @param source
+     *          The source instance.
+     * @param assertPresent
+     *          Passed to [parseMOAHeaders].
+     * @param untypedForUnrecognised
+     *          Passed to [parseMOAHeaders].
+     */
+    constructor(
+        source: Instance,
+        assertPresent: (Int, Attribute, Boolean) -> Boolean = { _, _, _ -> false },
+        untypedForUnrecognised: Boolean = false
+    ): this(
+        source,
+        parseMOAHeaders(source.dataset(), assertPresent, untypedForUnrecognised),
+        null
+    )
 
+    override val weight : Double = source.weight()
+
+    override fun <T> getValue(
+        representation : DataRepresentation<*, *, out T>
+    ) : T = headers.ensureOwnership(representation) {
+        val value = source.value(columnIndex)
+        representationParseMOAValue(this, value)
+    }
 }

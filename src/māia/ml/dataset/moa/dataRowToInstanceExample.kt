@@ -27,16 +27,25 @@ import moa.core.InstanceExample
 import māia.ml.dataset.DataRow
 import māia.ml.dataset.util.weight
 
+/**
+ * TODO
+ */
 fun dataRowToInstanceExample(
     row: DataRow,
     headers: InstancesHeader,
     predict: Boolean = false
 ): Example<Instance> {
-    if (row is MOADataRow) return row.source
+    if (row is MOADataRow)
+        return InstanceExample(row.source)
 
     val classIndex = headers.classIndex()
 
-    val getMOAValue = if (predict) { index ->
+    // Create a custom value-getter which inserts a zero-value at the class-index
+    // when in predict-mode. This is due to a difference between MOA and MĀIA, where
+    // MOA will pass a class-value to a learner during prediction and expect it to
+    // ignore it, MĀIA will simply not pass one (hence the row is one column shorter).
+    val getMOAValue = if (predict)
+    { index ->
         when {
             index == classIndex -> 0.0
             index > classIndex -> row.getColumnForMOA(index - 1)
@@ -44,12 +53,8 @@ fun dataRowToInstanceExample(
         }
     } else row::getColumnForMOA
 
-    return InstanceExample(
-        InstanceImpl(
-            row.weight,
-            DoubleArray(headers.numAttributes(), getMOAValue)
-        ).apply {
-            setDataset(headers)
-        }
-    )
+    val instance = InstanceImpl(row.weight, DoubleArray(headers.numAttributes(), getMOAValue))
+    instance.setDataset(headers)
+
+    return InstanceExample(instance)
 }

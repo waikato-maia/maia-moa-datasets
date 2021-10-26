@@ -21,39 +21,49 @@ package māia.ml.dataset.moa
 
 import com.yahoo.labs.samoa.instances.Instances
 import com.yahoo.labs.samoa.instances.InstancesHeader
-import māia.ml.dataset.WithColumnHeaders
+import māia.ml.dataset.WithColumns
 import māia.ml.dataset.WithMetadata
 import māia.util.asIterable
 import māia.util.enumerate
 import māia.util.filter
+import māia.util.inlineRangeForLoop
 
+/**
+ * TODO
+ */
 fun withColumnHeadersToInstancesHeader(
-    source: WithColumnHeaders,
+    source: WithColumns,
     classIndex : Int? = null
 ): InstancesHeader {
-    return when (source) {
-        is MOADataStream -> source.source.header
-        is MOADataRow -> source.stream.source.header
-        else -> InstancesHeader(
-            Instances(
-                if (source is WithMetadata) source.name else "",
-                Array(source.numColumns) {
-                    dataColumnHeaderToAttribute(
-                        source.getColumnHeader(it)
-                    )
-                },
-                0
-            )
-        ).apply {
-            val classIndexActual = classIndex ?: source
-                .iterateColumnHeaders()
-                .enumerate()
-                .filter { it.second.isTarget }
-                .asIterable()
-                .firstOrNull()
-                ?.first
+    // If the source is a wrapper around a MOA data-set already, internally
+    // inspect it for the MOA header
+    if (source is MOADataStream)
+        return source.source.header
+    if (source is MOADataRow && source.stream != null)
+        return source.stream.source.header
 
-            if (classIndexActual != null) setClassIndex(classIndexActual)
+    // Create the header manually
+    val result = InstancesHeader(
+        Instances(
+            if (source is WithMetadata) source.name else "",
+            Array(source.numColumns) {
+                dataColumnHeaderToAttribute(source.headers[it])
+            },
+            0
+        )
+    )
+
+    // Either use the given class index, or find the first target header and use that
+    if (classIndex !== null) {
+        result.setClassIndex(classIndex)
+    } else {
+        for (header in source.headers) {
+            if (header.isTarget) {
+                result.setClassIndex(header.index)
+                break
+            }
         }
     }
+
+    return result
 }

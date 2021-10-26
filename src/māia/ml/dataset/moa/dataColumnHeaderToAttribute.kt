@@ -20,25 +20,22 @@
 package māia.ml.dataset.moa
 
 import com.yahoo.labs.samoa.instances.Attribute
-import māia.ml.dataset.DataColumnHeader
-import māia.ml.dataset.type.Nominal
-import māia.ml.dataset.type.Numeric
-import māia.ml.dataset.util.ifIsPossiblyMissing
+import māia.ml.dataset.headers.header.DataColumnHeader
+import māia.ml.dataset.type.standard.Nominal
+import māia.ml.dataset.type.standard.Numeric
 import māia.util.collect
 
+/**
+ * TODO
+ */
 fun dataColumnHeaderToAttribute(
     source: DataColumnHeader
 ): Attribute {
-    if (source is MOADataColumnHeader) return source.source
-
     val type = source.type
-    return ifIsPossiblyMissing<Numeric<*>>(type) then {
-        Attribute(source.name)
-    } otherwise {
-        ifIsPossiblyMissing<Nominal<*>>(type) then {
-            Attribute(source.name, it.iterateCategories().collect(ArrayList()))
-        } otherwise {
-            throw Exception("Column must be numeric or nominal")
-        }
+
+    return when (type) {
+        is Nominal<*, *, *, *> -> Attribute(source.name, type.iterator().collect(ArrayList()))
+        is Numeric<*, *> -> Attribute(source.name)
+        else -> throw Exception("Column must be numeric or nominal")
     }
 }

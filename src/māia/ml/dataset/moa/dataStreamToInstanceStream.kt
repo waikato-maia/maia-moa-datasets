@@ -27,6 +27,9 @@ import moa.streams.InstanceStream
 import māia.ml.dataset.DataStream
 import java.lang.StringBuilder
 
+/**
+ * TODO
+ */
 fun dataStreamToInstanceStream(
     source: DataStream<*>
 ): InstanceStream {
@@ -57,13 +60,9 @@ fun dataStreamToInstanceStream(
         override fun nextInstance() : Example<Instance> =
             dataRowToInstanceExample(iter.next(), headers)
 
-        override fun isRestartable() : Boolean {
-            TODO("Not yet implemented")
-        }
+        override fun isRestartable() : Boolean = false
 
-        override fun restart() {
-            TODO("Not yet implemented")
-        }
+        override fun restart() = throw Exception("Cannot be restarted")
 
     }
 }
