@@ -22,7 +22,6 @@ package māia.ml.dataset.moa
 import com.yahoo.labs.samoa.instances.Attribute
 import com.yahoo.labs.samoa.instances.Instances
 import māia.ml.dataset.headers.MutableDataColumnHeaders
-import māia.util.inlineRangeForLoop
 
 /**
  * Parses the headers of a MOA data-set for MĀIA.
@@ -58,7 +57,7 @@ fun parseMOAHeaders(
     val result = MutableDataColumnHeaders(size)
 
     // For each column...
-    inlineRangeForLoop(size) { columnIndex ->
+    repeat(size) { columnIndex ->
         // Get the MOA attribute
         val attribute = instances.attribute(columnIndex)
 

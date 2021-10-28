@@ -25,7 +25,6 @@ import kotlinx.benchmark.Scope
 import moa.streams.generators.RandomRBFGenerator
 import māia.ml.dataset.type.standard.Numeric
 import māia.util.assertType
-import māia.util.inlineRangeForLoop
 import org.openjdk.jmh.annotations.Benchmark
 import org.openjdk.jmh.annotations.BenchmarkMode
 import org.openjdk.jmh.annotations.Measurement
@@ -66,11 +65,11 @@ open class ProduceRowsBenchmark {
         gen.numCentroidsOption.value = params.numCentroids
         gen.prepareForUse()
 
-        inlineRangeForLoop(params.numRows) {
+        repeat(params.numRows) {
             val row = gen.nextInstance()
             var sum = 0.0
-            inlineRangeForLoop(params.numAttrs) {
-                sum += row.data.value(it)
+            for (attributeIndex in 0 until params.numAttrs) {
+                sum += row.data.value(attributeIndex)
             }
             blackhole.consume(sum)
         }
@@ -88,11 +87,11 @@ open class ProduceRowsBenchmark {
         ) { _, _, _ -> true }
         val iter = gen.rowIterator()
 
-        inlineRangeForLoop(params.numRows) {
+        repeat(params.numRows) {
             val row = iter.next()
             var sum = 0.0
-            inlineRangeForLoop(params.numAttrs) {
-                val repr = assertType<Numeric<*, *>>(gen.headers[it].type).canonicalRepresentation
+            for (headerIndex in 0 until params.numAttrs) {
+                val repr = assertType<Numeric<*, *>>(gen.headers[headerIndex].type).canonicalRepresentation
                 sum += row.getValue(repr)
             }
             blackhole.consume(sum)

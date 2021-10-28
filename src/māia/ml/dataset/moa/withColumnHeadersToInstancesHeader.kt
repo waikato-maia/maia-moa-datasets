@@ -23,10 +23,6 @@ import com.yahoo.labs.samoa.instances.Instances
 import com.yahoo.labs.samoa.instances.InstancesHeader
 import māia.ml.dataset.WithColumns
 import māia.ml.dataset.WithMetadata
-import māia.util.asIterable
-import māia.util.enumerate
-import māia.util.filter
-import māia.util.inlineRangeForLoop
 
 /**
  * TODO
