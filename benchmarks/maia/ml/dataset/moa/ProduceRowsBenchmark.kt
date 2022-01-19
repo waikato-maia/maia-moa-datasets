@@ -17,14 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with MĀIA.  If not, see <https://www.gnu.org/licenses/>.
  */
-package māia.ml.dataset.moa
+package maia.ml.dataset.moa
 
 import kotlinx.benchmark.Blackhole
 import kotlinx.benchmark.Mode
 import kotlinx.benchmark.Scope
 import moa.streams.generators.RandomRBFGenerator
-import māia.ml.dataset.type.standard.Numeric
-import māia.util.assertType
+import maia.ml.dataset.type.standard.Numeric
+import maia.util.assertType
 import org.openjdk.jmh.annotations.Benchmark
 import org.openjdk.jmh.annotations.BenchmarkMode
 import org.openjdk.jmh.annotations.Measurement

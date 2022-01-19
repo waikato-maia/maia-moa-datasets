@@ -17,15 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with MĀIA.  If not, see <https://www.gnu.org/licenses/>.
  */
-package māia.ml.dataset.moa
+package maia.ml.dataset.moa
 
 import com.yahoo.labs.samoa.instances.Instance
 import com.yahoo.labs.samoa.instances.InstanceImpl
 import com.yahoo.labs.samoa.instances.InstancesHeader
 import moa.core.Example
 import moa.core.InstanceExample
-import māia.ml.dataset.DataRow
-import māia.ml.dataset.util.weight
+import maia.ml.dataset.DataRow
+import maia.ml.dataset.util.weight
 
 /**
  * TODO

@@ -17,13 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with MĀIA.  If not, see <https://www.gnu.org/licenses/>.
  */
-package māia.ml.dataset.moa
+package maia.ml.dataset.moa
 
 import com.yahoo.labs.samoa.instances.Attribute
-import māia.ml.dataset.headers.header.DataColumnHeader
-import māia.ml.dataset.type.standard.Nominal
-import māia.ml.dataset.type.standard.Numeric
-import māia.util.collect
+import maia.ml.dataset.headers.header.DataColumnHeader
+import maia.ml.dataset.type.standard.Nominal
+import maia.ml.dataset.type.standard.Numeric
+import maia.util.collect
 
 /**
  * TODO

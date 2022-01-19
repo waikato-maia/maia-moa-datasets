@@ -17,14 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with MĀIA.  If not, see <https://www.gnu.org/licenses/>.
  */
-package māia.ml.dataset.moa
+package maia.ml.dataset.moa
 
 import com.yahoo.labs.samoa.instances.Instance
 import com.yahoo.labs.samoa.instances.InstancesHeader
 import moa.MOAObject
 import moa.core.Example
 import moa.streams.InstanceStream
-import māia.ml.dataset.DataStream
+import maia.ml.dataset.DataStream
 import java.lang.StringBuilder
 
 /**

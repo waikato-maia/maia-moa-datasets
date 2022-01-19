@@ -17,11 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with MĀIA.  If not, see <https://www.gnu.org/licenses/>.
  */
-package māia.ml.dataset.moa
+package maia.ml.dataset.moa
 
-import māia.ml.dataset.DataRow
-import māia.ml.dataset.type.standard.Nominal
-import māia.ml.dataset.type.standard.Numeric
+import maia.ml.dataset.DataRow
+import maia.ml.dataset.type.standard.Nominal
+import maia.ml.dataset.type.standard.Numeric
 
 /**
  * Gets the value from a data-row in the format that MOA expects.

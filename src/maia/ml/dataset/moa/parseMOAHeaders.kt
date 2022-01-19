@@ -17,11 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with MĀIA.  If not, see <https://www.gnu.org/licenses/>.
  */
-package māia.ml.dataset.moa
+package maia.ml.dataset.moa
 
 import com.yahoo.labs.samoa.instances.Attribute
 import com.yahoo.labs.samoa.instances.Instances
-import māia.ml.dataset.headers.MutableDataColumnHeaders
+import maia.ml.dataset.headers.MutableDataColumnHeaders
 
 /**
  * Parses the headers of a MOA data-set for MĀIA.

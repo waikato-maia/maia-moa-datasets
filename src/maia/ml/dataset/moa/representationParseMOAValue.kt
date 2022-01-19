@@ -17,17 +17,17 @@
  * You should have received a copy of the GNU General Public License
  * along with MĀIA.  If not, see <https://www.gnu.org/licenses/>.
  */
-package māia.ml.dataset.moa
+package maia.ml.dataset.moa
 
-import māia.ml.dataset.type.DataRepresentation
-import māia.ml.dataset.type.EntropicRepresentation
-import māia.ml.dataset.type.standard.Nominal
-import māia.ml.dataset.type.standard.NominalCanonicalRepresentation
-import māia.ml.dataset.type.standard.NominalIndexRepresentation
-import māia.ml.dataset.type.standard.NumericCanonicalRepresentation
-import māia.ml.dataset.type.standard.UntypedRepresentation
-import māia.util.assertType
-import māia.util.error.UNREACHABLE_CODE
+import maia.ml.dataset.type.DataRepresentation
+import maia.ml.dataset.type.EntropicRepresentation
+import maia.ml.dataset.type.standard.Nominal
+import maia.ml.dataset.type.standard.NominalCanonicalRepresentation
+import maia.ml.dataset.type.standard.NominalIndexRepresentation
+import maia.ml.dataset.type.standard.NumericCanonicalRepresentation
+import maia.ml.dataset.type.standard.UntypedRepresentation
+import maia.util.assertType
+import maia.util.error.UNREACHABLE_CODE
 
 /**
  * Parses a value from MOA using the provided representation.

@@ -17,12 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with MĀIA.  If not, see <https://www.gnu.org/licenses/>.
  */
-package māia.ml.dataset.moa
+package maia.ml.dataset.moa
 
 import com.yahoo.labs.samoa.instances.Attribute
 import moa.streams.InstanceStream
-import māia.ml.dataset.DataMetadata
-import māia.ml.dataset.DataStream
+import maia.ml.dataset.DataMetadata
+import maia.ml.dataset.DataStream
 
 /**
  * Wraps a MOA [InstanceStream] as a MĀIA [DataStream].
