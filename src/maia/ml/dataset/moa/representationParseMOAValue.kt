@@ -44,7 +44,7 @@ fun <T> representationParseMOAValue(
     value: Double
 ): T {
     return when (representation) {
-        is NominalCanonicalRepresentation -> assertType<Nominal<*, *, *, *>>(representation.dataType)[value.toInt()]
+        is NominalCanonicalRepresentation -> assertType<Nominal<*, *, *, *, *>>(representation.dataType)[value.toInt()]
         is NominalIndexRepresentation -> value.toInt()
         is EntropicRepresentation -> value.toInt().toBigInteger()
         is NumericCanonicalRepresentation -> value

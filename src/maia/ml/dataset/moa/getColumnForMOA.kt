@@ -38,7 +38,7 @@ fun DataRow.getColumnForMOA(
     columnIndex: Int
 ): Double {
     return when (val type = headers[columnIndex].type) {
-        is Nominal<*, *, *, *> -> getValue(type.indexRepresentation).toDouble()
+        is Nominal<*, *, *, *, *> -> getValue(type.indexRepresentation).toDouble()
         is Numeric<*, *> -> getValue(type.canonicalRepresentation)
         else -> throw Exception("Not nominal or numeric")
     }

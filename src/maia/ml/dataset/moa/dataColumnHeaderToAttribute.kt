@@ -34,7 +34,7 @@ fun dataColumnHeaderToAttribute(
     val type = source.type
 
     return when (type) {
-        is Nominal<*, *, *, *> -> Attribute(source.name, type.iterator().collect(ArrayList()))
+        is Nominal<*, *, *, *, *> -> Attribute(source.name, type.iterator().collect(ArrayList()))
         is Numeric<*, *> -> Attribute(source.name)
         else -> throw Exception("Column must be numeric or nominal")
     }
