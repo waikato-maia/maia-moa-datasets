@@ -21,21 +21,23 @@ package maia.ml.dataset.moa
 
 import com.yahoo.labs.samoa.instances.Instance
 import com.yahoo.labs.samoa.instances.InstancesHeader
+import kotlinx.coroutines.channels.Channel
 import moa.MOAObject
 import moa.core.Example
 import moa.streams.InstanceStream
-import maia.ml.dataset.DataStream
+import maia.ml.dataset.AsyncDataStream
+import maia.ml.dataset.util.sync
 import java.lang.StringBuilder
 
 /**
  * TODO
  */
 fun dataStreamToInstanceStream(
-    source: DataStream<*>
+    source: AsyncDataStream<*>
 ): InstanceStream {
     return object : InstanceStream {
         private val headers = withColumnHeadersToInstancesHeader(source)
-        private val iter = source.rowIterator()
+        private val iter = source.sync(Channel.UNLIMITED).rowIterator()
 
         override fun measureByteSize() : Int {
             TODO("Not yet implemented")
